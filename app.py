@@ -79,6 +79,12 @@ def main() -> None:
 	st.caption("Load a real CSV, classify sentiment via OpenAI, filter by product, and visualize.")
 
 	load_dotenv(override=False)
+	# Support Streamlit Cloud secrets as a fallback for the API key
+	try:
+		if "OPENAI_API_KEY" in st.secrets and not os.getenv("OPENAI_API_KEY"):
+			os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+	except Exception:
+		pass
 	base_dir = Path(__file__).resolve().parent
 	default_csv = str(base_dir / "data" / "customer_reviews.csv")
 
